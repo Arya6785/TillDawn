@@ -3,12 +3,17 @@ package com.tilldawn.View;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.tilldawn.Controller.SignUpMenuController;
 import com.tilldawn.Main;
 
 public class SignUpMenuView implements Screen {
+    private final SignUpMenuController controller = new SignUpMenuController();
+
     private final Main game;
     private Stage stage;
     private Skin skin;
@@ -33,6 +38,25 @@ public class SignUpMenuView implements Screen {
 
         TextButton Submit = new TextButton("Submit", skin);
 
+        Submit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String username = UsernameField.getText();
+                String password = PasswordField.getText();
+
+                String result = controller.validateSignup(username, password);
+
+                if (result.equals("OK")) {
+                    System.out.println("Signup successful");
+                    //game.setScreen(new LoginView(game)); // برو به لاگین
+                } else {
+                    Dialog dialog = new Dialog("Error", skin);
+                    dialog.text(result);
+                    dialog.button("OK");
+                    dialog.show(stage);
+                }
+            }
+        });
 
 
         Table SignUpTable = new Table();
