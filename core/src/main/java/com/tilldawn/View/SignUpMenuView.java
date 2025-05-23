@@ -3,6 +3,7 @@ package com.tilldawn.View;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -13,13 +14,14 @@ import com.tilldawn.Main;
 
 public class SignUpMenuView implements Screen {
     private final SignUpMenuController controller = new SignUpMenuController();
-
+    private final MainMenuView mainMenuView;
     private final Main game;
     private Stage stage;
     private Skin skin;
 
-    public SignUpMenuView(Main game) {
+    public SignUpMenuView(Main game, MainMenuView mainMenuView) {
         this.game = game;
+        this.mainMenuView = mainMenuView;
     }
 
 
@@ -35,6 +37,9 @@ public class SignUpMenuView implements Screen {
 
         TextField PasswordField = new TextField("", skin);
         TextField UsernameField = new TextField("", skin);
+        Texture background = new Texture(Gdx.files.internal("background.png"));
+        Image backgroundImage = new Image(background);
+        backgroundImage.setFillParent(true);
 
         TextButton Submit = new TextButton("Submit", skin);
 
@@ -48,6 +53,13 @@ public class SignUpMenuView implements Screen {
 
                 if (result.equals("OK")) {
                     System.out.println("Signup successful");
+                    Dialog dialog = new Dialog("Signup successful", skin);
+                    dialog.button("OK");
+                    dialog.show(stage);
+                    game.setScreen(mainMenuView);
+                    // بعدا اوکی کن
+
+
                     //game.setScreen(new LoginView(game)); // برو به لاگین
                 } else {
                     Dialog dialog = new Dialog("Error", skin);
@@ -69,8 +81,9 @@ public class SignUpMenuView implements Screen {
         SignUpTable.add(PasswordField).width(200).pad(10);
         SignUpTable.row();
         SignUpTable.add(Submit).colspan(2).pad(20);
-
+        stage.addActor(backgroundImage);
         stage.addActor(SignUpTable);
+
 
 
 

@@ -21,7 +21,7 @@ public class MainMenuView implements Screen {
 
     public MainMenuView(Main game) {
         this.game = game;
-        this.controller = new MainMenuController(game);
+        this.controller = new MainMenuController(game,this);
     }
 
     @Override
@@ -34,7 +34,6 @@ public class MainMenuView implements Screen {
         Texture background = new Texture(Gdx.files.internal("background.png"));
         Image backgroundImage = new Image(background);
         backgroundImage.setFillParent(true);
-
 
         TextButton loginButton = new TextButton("Login", skin);
         TextButton registerButton = new TextButton("SignUp", skin);
