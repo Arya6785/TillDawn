@@ -7,6 +7,7 @@ import com.tilldawn.Model.AppData;
 import com.tilldawn.Model.Enums.Menu;
 import com.tilldawn.View.LoginMenuView;
 import com.tilldawn.View.MainMenuView;
+import com.tilldawn.View.ProfileMenuView;
 import com.tilldawn.View.SignUpMenuView;
 
 public class MainMenuController {
@@ -30,6 +31,15 @@ public class MainMenuController {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 game.setScreen(new SignUpMenuView(game,mainMenuView));
+            }
+        };
+    }
+
+    public ClickListener Profile(){
+        return new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                game.setScreen(new ProfileMenuView(game));
             }
         };
     }

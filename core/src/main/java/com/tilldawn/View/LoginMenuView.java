@@ -81,7 +81,7 @@ public class LoginMenuView implements Screen {
                 if (user != null) {
                     askSecurityQuestion(user, controller);
                 } else {
-                    showMessage("User not found.");
+                    AppData.showMessage("User not found.",skin,stage);
                 }
             }
         });
@@ -118,9 +118,9 @@ public class LoginMenuView implements Screen {
             protected void result(Object object) {
                 String answer = answerField.getText();
                 if (controller.checkSecurityAnswer(user, answer)) {
-                    showMessage("Correct! Your password is: " + user.password);
+                    AppData.showMessage("Correct! Your password is: " + user.password,skin,stage);
                 } else {
-                    showMessage("Incorrect answer.");
+                    AppData.showMessage("Incorrect answer.",skin,stage);
                 }
             }
         };
@@ -132,14 +132,7 @@ public class LoginMenuView implements Screen {
     }
 
 
-    private void showMessage(String msg) {
-        Dialog dialog = new Dialog("Message", skin);
-        Label label = new Label(msg, skin);
-        label.setFontScale(1.5f); // اگه بخوای بزرگ‌تر بشه
-        dialog.text(label);
-        dialog.button("OK");
-        dialog.show(stage);
-    }
+
 
 
 
