@@ -3,12 +3,10 @@ package com.tilldawn.View;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Main;
@@ -41,11 +39,13 @@ public class ProfileMenuView implements Screen {
         usernameField.setMessageText("New Username");
         passwordField.setMessageText("New Password");
         confirmPasswordField.setMessageText("Confirm Password");
+        Texture background = new Texture(Gdx.files.internal("background.png"));
+        Image backgroundImage = new Image(background);
 
         TextButton changeUsernameBtn = new TextButton("Change Username", skin);
         TextButton changePasswordBtn = new TextButton("Change Password", skin);
         TextButton backBtn = new TextButton("Back", skin);
-
+        TextButton TerminateUser = new TextButton("Terminate User", skin);
         changeUsernameBtn.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 String newUsername = usernameField.getText();
@@ -62,6 +62,17 @@ public class ProfileMenuView implements Screen {
                     AppData.CurrentUser.username = newUsername;
                     AppData.showMessage("Username changed successfully.", skin, stage);
                 }
+            }
+        });
+        TerminateUser.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(AppData.CurrentUser == null) {
+                    AppData.showMessage("No user is currently logged in.", skin, stage);
+                    return;
+                }
+                AppData.users.remove(AppData.CurrentUser);
+                AppData.CurrentUser = null;
+                AppData.showMessage("Username removed successfully.", skin, stage);
             }
         });
         changePasswordBtn.addListener(new ClickListener() {
@@ -92,8 +103,9 @@ public class ProfileMenuView implements Screen {
         table.add(passwordField).width(300).pad(10); table.row();
         table.add(confirmPasswordField).width(300).pad(10); table.row();
         table.add(changePasswordBtn).width(500).pad(10); table.row();
+        table.add(TerminateUser).width(500).pad(10); table.row();
         table.add(backBtn).width(300).pad(10);
-
+        stage.addActor(backgroundImage);
         stage.addActor(table);
     }
     private boolean isPasswordStrong(String password) {
