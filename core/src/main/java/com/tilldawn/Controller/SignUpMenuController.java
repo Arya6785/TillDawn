@@ -15,7 +15,7 @@ public class SignUpMenuController {
 
 
 
-        public String validateSignup(String username, String password) {
+        public String validateSignup(String username, String password,String answer) {
             if (username == null || username.equals("")) {
                 return "Username is required";
             }
@@ -26,10 +26,15 @@ public class SignUpMenuController {
                 return "Password is required";
             }
 
-            if (!isStrongPassword(password))
-                return "Password is too weak.";
 
-            AppData.users.add(new User(username, password));
+            if (!isStrongPassword(password)) {
+                return "Password is too weak.";
+            }
+
+            if (answer == null || answer.equals("")) {
+                return "Security Answer is required";
+            }
+
             return "OK"; // موفقیت
         }
 

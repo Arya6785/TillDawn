@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tilldawn.Main;
 import com.tilldawn.Model.AppData;
 import com.tilldawn.Model.Enums.Menu;
+import com.tilldawn.View.LoginMenuView;
 import com.tilldawn.View.MainMenuView;
 import com.tilldawn.View.SignUpMenuView;
 
@@ -19,7 +20,7 @@ public class MainMenuController {
         return new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                AppData.currentMenu = Menu.LOGINMENU;
+                game.setScreen(new LoginMenuView(game,mainMenuView));
             }
         };
     }

@@ -11,6 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Controller.SignUpMenuController;
 import com.tilldawn.Main;
+import com.tilldawn.Model.AppData;
+import com.tilldawn.Model.User;
+
+import java.util.ArrayList;
 
 public class SignUpMenuView implements Screen {
     private final SignUpMenuController controller = new SignUpMenuController();
@@ -18,6 +22,7 @@ public class SignUpMenuView implements Screen {
     private final Main game;
     private Stage stage;
     private Skin skin;
+    public List<String> securityQuestions;
 
     public SignUpMenuView(Main game, MainMenuView mainMenuView) {
         this.game = game;
@@ -36,20 +41,40 @@ public class SignUpMenuView implements Screen {
         Label password = new Label("Password", skin);
 
         TextField PasswordField = new TextField("", skin);
+        PasswordField.setMessageText("Enter your password");
         TextField UsernameField = new TextField("", skin);
+        UsernameField.setMessageText("Enter your username");
+
         Texture background = new Texture(Gdx.files.internal("background.png"));
         Image backgroundImage = new Image(background);
         backgroundImage.setFillParent(true);
+        securityQuestions = new List<>(skin);
+        securityQuestions.setItems(
+            "What is name of your city",
+            "what is your favorite color",
+            "name of your best friend"
+        );
+        ScrollPane securityQuestionsPane = new ScrollPane(securityQuestions, skin);
+        securityQuestionsPane.setFadeScrollBars(false);
+        securityQuestionsPane.setScrollingDisabled(true, false);
+
+        TextField securityAnswer = new TextField("", skin);
+        securityAnswer.setMessageText("Enter answer");
+
+
+
 
         TextButton Submit = new TextButton("Submit", skin);
+        TextButton Back = new TextButton("Back", skin);
 
         Submit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                String Question = securityQuestions.getSelected();
                 String username = UsernameField.getText();
                 String password = PasswordField.getText();
-
-                String result = controller.validateSignup(username, password);
+                String answer = securityAnswer.getText();
+                String result = controller.validateSignup(username, password,answer);
 
                 if (result.equals("OK")) {
                     System.out.println("Signup successful");
@@ -57,6 +82,7 @@ public class SignUpMenuView implements Screen {
                     dialog.button("OK");
                     dialog.show(stage);
                     game.setScreen(mainMenuView);
+                    AppData.users.add(new User(username,password,answer,Question));
                     // بعدا اوکی کن
 
 
@@ -70,17 +96,28 @@ public class SignUpMenuView implements Screen {
             }
         });
 
+        Back.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(mainMenuView);
+            }
+        });
+
+
 
         Table SignUpTable = new Table();
         SignUpTable.setFillParent(true);
         SignUpTable.center();
-        SignUpTable.add(username).pad(10);
-        SignUpTable.add(UsernameField).width(200).pad(10);
+        SignUpTable.add(UsernameField).width(350).pad(10);
         SignUpTable.row();
-        SignUpTable.add(password).pad(10);
-        SignUpTable.add(PasswordField).width(200).pad(10);
+        SignUpTable.add(PasswordField).width(350).pad(10);
+        SignUpTable.row();
+        SignUpTable.add(securityQuestionsPane).width(800).pad(10);
+        SignUpTable.row();
+        SignUpTable.add(securityAnswer).width(350).pad(10);
         SignUpTable.row();
         SignUpTable.add(Submit).colspan(2).pad(20);
+        SignUpTable.row();
+        SignUpTable.add(Back).colspan(2).pad(20);
         stage.addActor(backgroundImage);
         stage.addActor(SignUpTable);
 
