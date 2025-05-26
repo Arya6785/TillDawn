@@ -3,7 +3,6 @@ package com.tilldawn.Model;
 public class User {
     public String username;
     public String password;
-
     public User(String username, String password,String answer,String Question) {
         this.username = username;
         this.password = password;
@@ -12,7 +11,6 @@ public class User {
     }
     public String SecurityAnswer;
     public String Question;
-
     public String getUsername() {
         return username;
     }

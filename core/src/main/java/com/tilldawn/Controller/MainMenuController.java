@@ -5,10 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tilldawn.Main;
 import com.tilldawn.Model.AppData;
 import com.tilldawn.Model.Enums.Menu;
-import com.tilldawn.View.LoginMenuView;
-import com.tilldawn.View.MainMenuView;
-import com.tilldawn.View.ProfileMenuView;
-import com.tilldawn.View.SignUpMenuView;
+import com.tilldawn.View.*;
 
 public class MainMenuController {
     private final MainMenuView mainMenuView;
@@ -40,6 +37,14 @@ public class MainMenuController {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 game.setScreen(new ProfileMenuView(game));
+            }
+        };
+    }
+    public ClickListener PreGame(){
+        return new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                game.setScreen(new PreGameView(game,mainMenuView));
             }
         };
     }

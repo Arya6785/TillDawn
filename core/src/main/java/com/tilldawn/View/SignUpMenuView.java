@@ -14,8 +14,6 @@ import com.tilldawn.Main;
 import com.tilldawn.Model.AppData;
 import com.tilldawn.Model.User;
 
-import java.util.ArrayList;
-
 public class SignUpMenuView implements Screen {
     private final SignUpMenuController controller = new SignUpMenuController();
     private final MainMenuView mainMenuView;
@@ -77,16 +75,9 @@ public class SignUpMenuView implements Screen {
                 String result = controller.validateSignup(username, password,answer);
 
                 if (result.equals("OK")) {
-                    System.out.println("Signup successful");
-                    Dialog dialog = new Dialog("Signup successful", skin);
-                    dialog.button("OK");
-                    dialog.show(stage);
-                    game.setScreen(mainMenuView);
+                    AppData.showMessage("You have signed up successfully" ,skin ,stage);
                     AppData.users.add(new User(username,password,answer,Question));
-                    // بعدا اوکی کن
 
-
-                    //game.setScreen(new LoginView(game)); // برو به لاگین
                 } else {
                     Dialog dialog = new Dialog("Error", skin);
                     dialog.text(result);
