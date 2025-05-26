@@ -23,6 +23,11 @@ public class Player extends Actor {
         idleAnim = loadAnimation("Idle");
         walkAnim = loadAnimation("walk");
         runAnim = loadAnimation("run");
+
+        TextureRegion firstFrame = idleAnim.getKeyFrame(0);
+        float originalWidth = firstFrame.getRegionWidth();
+        float originalHeight = firstFrame.getRegionHeight();
+        setSize(originalWidth * 3.5f, originalHeight * 3.5f);
     }
     private Animation<TextureRegion> loadAnimation(String state) {
         try {
@@ -46,6 +51,28 @@ public class Player extends Actor {
             return null;
         }
     }
+    private boolean facingRight = true;
+
+    public void setFacingRight(boolean right) {
+        if (this.facingRight != right) {
+            this.facingRight = right;
+            flipAnimationFrames(idleAnim);
+            flipAnimationFrames(walkAnim);
+            flipAnimationFrames(runAnim);
+        }
+    }
+
+    private void flipAnimationFrames(Animation<TextureRegion> anim) {
+        Object[] keyFrames = anim.getKeyFrames();
+        for (Object obj : keyFrames) {
+            if (obj instanceof TextureRegion) {
+                TextureRegion region = (TextureRegion) obj;
+                region.flip(true, false);
+            }
+        }
+    }
+
+
 
 
     @Override
@@ -59,12 +86,11 @@ public class Player extends Actor {
         TextureRegion currentFrame;
 
         switch (currentState) {
-            case "walk": currentFrame = walkAnim.getKeyFrame(stateTime); break;
             case "run": currentFrame = runAnim.getKeyFrame(stateTime); break;
             case "Idle": currentFrame = idleAnim.getKeyFrame(stateTime); break;
             default: currentFrame = idleAnim.getKeyFrame(stateTime); break;
         }
-        batch.draw(currentFrame, getX(), getY());
+        batch.draw(currentFrame, getX(), getY(), getWidth(), getHeight());
     }
 
     public void setState(String state) {
