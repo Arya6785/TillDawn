@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
@@ -61,6 +62,10 @@ public class Player extends Actor {
             flipAnimationFrames(runAnim);
         }
     }
+    public Vector2 getCenter() {
+        return new Vector2(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
+    }
+
 
     private void flipAnimationFrames(Animation<TextureRegion> anim) {
         Object[] keyFrames = anim.getKeyFrames();
