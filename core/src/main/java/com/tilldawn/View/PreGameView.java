@@ -37,7 +37,7 @@ public class PreGameView implements Screen {
         Play.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event ,float x, float y){
-                game.setScreen(new GameView(game,Heroes.getSelected()));
+                game.setScreen(new GameView(game,Heroes.getSelected(),mainMenuView));
             }
         });
         Heroes = new List<>(skin);

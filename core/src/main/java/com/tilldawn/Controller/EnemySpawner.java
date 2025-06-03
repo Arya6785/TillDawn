@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class EnemySpawner {
-    private final List<Enemy> enemies = new ArrayList<>();
+    public final List<Enemy> enemies ;
     private final float worldWidth = 3000;
     private final float worldHeight = 3000;
     private final Animation<TextureRegion> enemyRAnimation;
@@ -25,9 +25,10 @@ public class EnemySpawner {
     private List<Tree> trees;
 
 
-    public EnemySpawner(List<Tree> trees) {
+    public EnemySpawner(List<Tree> trees,List<Enemy> enemies) {
         this.enemyRAnimation = EnemyR.loadAnimation();
         this.trees = trees;
+        this.enemies = enemies;
     }
 
     public void update(Vector2 playerPos, float delta) {

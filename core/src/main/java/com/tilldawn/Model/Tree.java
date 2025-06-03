@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class Tree {
+public class Tree extends Enemy{
     private float x;
 
     public float getX() {
@@ -31,14 +31,17 @@ public class Tree {
     private Animation<TextureRegion> animation;
     private float stateTime = 0f;
     private static final float FRAME_DURATION = 0.8f;
-    private static final float WIDTH = 190;
-    private static final float HEIGHT = 240;
+    private static final float WIDTH = 210;
+    private static final float HEIGHT = 270;
 
     public Tree(float x, float y, Animation<TextureRegion> animation) {
+
+        super(x, y, 85f, 25, animation);
         this.x = x;
         this.y = y;
         this.animation = animation;
         this.stateTime = 0f;
+
     }
 
     public void render(SpriteBatch batch) {
@@ -49,6 +52,11 @@ public class Tree {
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, WIDTH, HEIGHT);
+    }
+
+    @Override
+    public void dropSeed() {
+
     }
 
     public static Animation<TextureRegion> loadAnimation() {

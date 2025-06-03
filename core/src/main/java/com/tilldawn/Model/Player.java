@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.tilldawn.Model.Enums.HeroStats;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,13 +20,21 @@ public class Player extends Actor {
     public float stateTime = 0;
     public String currentState = "Idle";
     public String characterName;
-
+    public int health;
+    public int speed;
+    public int maxHealth;
+    public boolean invincible = false;
+    public float invincibilityTime = 0;
+    public final float Invincibility_Duration = 5f;
     public Player(String characterName) {
         this.characterName = characterName;
         idleAnim = loadAnimation("Idle");
         walkAnim = loadAnimation("walk");
         runAnim = loadAnimation("run");
-
+        HeroStats stats = HeroStats.valueOf(characterName.toUpperCase());
+        this.health = stats.health;
+        this.speed = stats.speed;
+        this.maxHealth = this.health;
         TextureRegion firstFrame = idleAnim.getKeyFrame(0);
         float originalWidth = firstFrame.getRegionWidth();
         float originalHeight = firstFrame.getRegionHeight();
@@ -65,7 +75,9 @@ public class Player extends Actor {
     public Vector2 getCenter() {
         return new Vector2(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
     }
-
+    public Rectangle getBounds() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
 
     private void flipAnimationFrames(Animation<TextureRegion> anim) {
         Object[] keyFrames = anim.getKeyFrames();
@@ -96,6 +108,15 @@ public class Player extends Actor {
             default: currentFrame = idleAnim.getKeyFrame(stateTime); break;
         }
         batch.draw(currentFrame, getX(), getY(), getWidth(), getHeight());
+    }
+    public void update(float delta) {
+        if (invincible) {
+            invincibilityTime += delta;
+            if (invincibilityTime >= Invincibility_Duration) {
+                invincible = false;
+                invincibilityTime = 0;
+            }
+        }
     }
 
     public void setState(String state) {

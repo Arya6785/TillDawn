@@ -15,8 +15,8 @@ import com.tilldawn.Main;
 
 public class MainMenuView implements Screen {
     public final Main game;
-    private Stage stage;
-    private Skin skin;
+    public Stage stage;
+    public Skin skin;
     private MainMenuController controller;
 
     public MainMenuView(Main game) {

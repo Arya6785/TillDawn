@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Controller.EnemySpawner;
 import com.tilldawn.Main;
-import com.tilldawn.Model.Player;
-import com.tilldawn.Model.Tree;
+import com.tilldawn.Model.*;
 
 
 import java.util.ArrayList;
@@ -28,14 +28,17 @@ public class GameView implements Screen {
     private Texture background;
     private SpriteBatch batch;
     private EnemySpawner enemySpawner;
-
+    private MainMenuView mainMenuView;
     private List<Tree> trees = new ArrayList<>();
+    private List<Enemy> enemies = new ArrayList<>();
     private Animation<TextureRegion> treeAnimation;
-
-    public GameView(Main game, String selectedHero) {
+    private BitmapFont font;
+    public GameView(Main game, String selectedHero,MainMenuView mainMenuView) {
         this.game = game;
-        enemySpawner = new EnemySpawner(trees);
-
+        this.mainMenuView = mainMenuView;
+        font = new BitmapFont();
+        font.getData().setScale(2);
+        enemySpawner = new EnemySpawner(trees,enemies);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
         stage = new Stage(new ScreenViewport(camera));
@@ -120,6 +123,7 @@ public class GameView implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+
         // رسم پس‌زمینه از وسط دوربین
         batch.draw(
             background,
@@ -130,6 +134,8 @@ public class GameView implements Screen {
         );
         spawnTreesAroundPlayer();
         removeFarTrees();
+        checkCollision();
+        player.update(delta);
         // رسم دشمن‌ها
         enemySpawner.render(batch);
 
@@ -137,6 +143,7 @@ public class GameView implements Screen {
         for (Tree tree : trees) {
             tree.render(batch); // ✅ حالا داخل batch.begin هست
         }
+        font.draw(batch, "HP: " + player.health, camera.position.x - 1000, camera.position.y + 500);
 
         batch.end();
 
@@ -149,24 +156,24 @@ public class GameView implements Screen {
         boolean moving = false;
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.moveBy(-4, 0);
+            player.moveBy(-player.speed, 0);
             player.setState("run");
             player.setFacingRight(false);
             moving = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.moveBy(4, 0);
+            player.moveBy(player.speed, 0);
             player.setState("run");
             player.setFacingRight(true);
             moving = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.moveBy(0, 4);
+            player.moveBy(0, player.speed);
             player.setState("run");
             moving = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.moveBy(0, -4);
+            player.moveBy(0, -player.speed);
             player.setState("run");
             moving = true;
         }
@@ -174,6 +181,14 @@ public class GameView implements Screen {
         if (!moving) {
             player.setState("Idle");
         }
+    }
+    public void checkCollision() {
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof EnemyR && enemy.getBounds().overlaps(player.getBounds())) {
+                damage(1); // فقط EnemyR باعث دمیج میشه
+            }
+        }
+
     }
 
     private void updateCamera() {
@@ -184,6 +199,27 @@ public class GameView implements Screen {
         );
         camera.update();
     }
+    public void damage(int amount) {
+            if (!player.invincible) {
+                player.health -= amount;
+                player.invincible = true;
+                player.invincibilityTime = 0;
+                if (player.health <= 0) {
+                    die();
+                }
+            }
+
+
+    }
+
+    public void die() {
+        // هندل مرگ بازیکن
+        game.setScreen(mainMenuView);
+        AppData.showMessage("You Have Died",mainMenuView.skin,mainMenuView.stage);
+
+
+    }
+
 
     @Override
     public void resize(int width, int height) {

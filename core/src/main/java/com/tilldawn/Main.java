@@ -13,7 +13,6 @@ import com.tilldawn.View.MainMenuView;
 public class Main extends Game {
 
     public static Main main;
-
     private static SpriteBatch batch;
     @Override
     public void create() {

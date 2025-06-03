@@ -23,9 +23,9 @@ public class AppData {
         return false;
     }
     public static void showMessage(String msg, Skin skin, Stage stage) {
-        Dialog dialog = new Dialog("Message", skin);
+        Dialog dialog = new Dialog(" ", skin);
         Label label = new Label(msg, skin);
-        label.setFontScale(1.5f); // اگه بخوای بزرگ‌تر بشه
+        label.setFontScale(3f); // اگه بخوای بزرگ‌تر بشه
         dialog.text(label);
         dialog.button("OK");
         dialog.show(stage);
