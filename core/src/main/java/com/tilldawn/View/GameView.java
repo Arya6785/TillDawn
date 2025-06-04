@@ -10,9 +10,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Controller.EnemySpawner;
+import com.tilldawn.Controller.GameController;
 import com.tilldawn.Main;
 import com.tilldawn.Model.*;
 
@@ -21,19 +24,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameView implements Screen {
-    private final Main game;
-    private Stage stage;
-    private OrthographicCamera camera;
-    private Player player;
-    private Texture background;
-    private SpriteBatch batch;
-    private EnemySpawner enemySpawner;
-    private MainMenuView mainMenuView;
-    private List<Tree> trees = new ArrayList<>();
-    private List<Enemy> enemies = new ArrayList<>();
-    private Animation<TextureRegion> treeAnimation;
-    private BitmapFont font;
-    public GameView(Main game, String selectedHero,MainMenuView mainMenuView) {
+    private final GameController controller = new GameController();
+    public final Main game;
+    public Stage stage;
+    public OrthographicCamera camera;
+    public Player player;
+    public Texture background;
+    public SpriteBatch batch;
+    public EnemySpawner enemySpawner;
+    public MainMenuView mainMenuView;
+    public List<Tree> trees = new ArrayList<>();
+    public List<Enemy> enemies = new ArrayList<>();
+    public Animation<TextureRegion> treeAnimation;
+    public BitmapFont font;
+    public List<HeartPickup> pickups = new ArrayList<>();
+    public GameView(Main game, String selectedHero,Gun selectedGun,MainMenuView mainMenuView) {
         this.game = game;
         this.mainMenuView = mainMenuView;
         font = new BitmapFont();
@@ -50,7 +55,7 @@ public class GameView implements Screen {
             trees.add(new Tree(x, y, treeAnimation));
         }
 
-        player = new Player(selectedHero);
+        player = new Player(selectedHero,this,selectedGun);
         player.setPosition(100, 100);
 
         stage.addActor(player);
@@ -60,49 +65,8 @@ public class GameView implements Screen {
 
         batch = new SpriteBatch();
     }
-    private void spawnTreesAroundPlayer() {
-        float px = player.getX();
-        float py = player.getY();
-        int maxTrees = 12;
-        int attempts = 0;
-        int maxAttempts = 100;
 
-        while (trees.size() < maxTrees && attempts < maxAttempts) {
-            attempts++;
 
-            float angle = (float) (Math.random() * Math.PI * 2);
-            float distance = 1500 + (float) Math.random() * 400;
-            float x = px + (float) Math.cos(angle) * distance;
-            float y = py + (float) Math.sin(angle) * distance;
-
-            boolean tooClose = false;
-            for (Tree t : trees) {
-                float dx = t.getX() - x;
-                float dy = t.getY() - y;
-                float dist = (float) Math.sqrt(dx * dx + dy * dy);
-                if (dist < 500) { // حداقل فاصله بین درخت‌ها مثلاً 100 پیکسل
-                    tooClose = true;
-                    break;
-                }
-            }
-
-            if (!tooClose) {
-                trees.add(new Tree(x, y, treeAnimation));
-            }
-        }
-    }
-
-    private void removeFarTrees() {
-        float px = player.getX();
-        float py = player.getY();
-
-        trees.removeIf(tree -> {
-            float dx = tree.getX() - px;
-            float dy = tree.getY() - py;
-            float dist = (float) Math.sqrt(dx * dx + dy * dy);
-            return dist > 2500; // اگر از بازیکن خیلی دور شد، حذفش کن
-        });
-    }
 
 
     @Override
@@ -112,7 +76,7 @@ public class GameView implements Screen {
 
     @Override
     public void render(float delta) {
-        handleInput();
+        controller.handleInput(this);
         updateCamera();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -132,10 +96,18 @@ public class GameView implements Screen {
             camera.viewportWidth,
             camera.viewportHeight
         );
-        spawnTreesAroundPlayer();
-        removeFarTrees();
-        checkCollision();
+        controller.spawnTreesAroundPlayer(this);
+        controller.removeFarTrees(this);
+        controller.checkCollision(this);
         player.update(delta);
+        Vector2 playerCenter = player.getCenter();
+        Vector3 mouseWorld = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(mouseWorld);// فرض بر اینه که همچین متدی داری
+        player.gunSprite.updatePositionAndRotation(playerCenter, new Vector2(mouseWorld.x, mouseWorld.y));
+        player.gunSprite.draw(batch);
+        controller.Shoot(this);
+        controller.removeBullet(this,delta);
+        controller.PickUp(this);
         // رسم دشمن‌ها
         enemySpawner.render(batch);
 
@@ -145,6 +117,9 @@ public class GameView implements Screen {
         }
         font.draw(batch, "HP: " + player.health, camera.position.x - 1000, camera.position.y + 500);
 
+
+
+
         batch.end();
 
         stage.act(delta);
@@ -152,44 +127,8 @@ public class GameView implements Screen {
     }
 
 
-    private void handleInput() {
-        boolean moving = false;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.moveBy(-player.speed, 0);
-            player.setState("run");
-            player.setFacingRight(false);
-            moving = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.moveBy(player.speed, 0);
-            player.setState("run");
-            player.setFacingRight(true);
-            moving = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.moveBy(0, player.speed);
-            player.setState("run");
-            moving = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.moveBy(0, -player.speed);
-            player.setState("run");
-            moving = true;
-        }
 
-        if (!moving) {
-            player.setState("Idle");
-        }
-    }
-    public void checkCollision() {
-        for (Enemy enemy : enemies) {
-            if (enemy instanceof EnemyR && enemy.getBounds().overlaps(player.getBounds())) {
-                damage(1); // فقط EnemyR باعث دمیج میشه
-            }
-        }
-
-    }
 
     private void updateCamera() {
         camera.position.set(
@@ -199,26 +138,9 @@ public class GameView implements Screen {
         );
         camera.update();
     }
-    public void damage(int amount) {
-            if (!player.invincible) {
-                player.health -= amount;
-                player.invincible = true;
-                player.invincibilityTime = 0;
-                if (player.health <= 0) {
-                    die();
-                }
-            }
 
 
-    }
 
-    public void die() {
-        // هندل مرگ بازیکن
-        game.setScreen(mainMenuView);
-        AppData.showMessage("You Have Died",mainMenuView.skin,mainMenuView.stage);
-
-
-    }
 
 
     @Override

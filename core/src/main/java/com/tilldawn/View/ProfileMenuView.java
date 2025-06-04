@@ -16,7 +16,6 @@ public class ProfileMenuView implements Screen {
     private final Main game;
     private final Skin skin;
     private Stage stage;
-
     private final TextField usernameField;
     private final TextField passwordField;
     private final TextField confirmPasswordField;

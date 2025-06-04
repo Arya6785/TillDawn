@@ -5,12 +5,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy {
-    protected Animation<TextureRegion> animation;
-    protected float x, y;
-    protected float speed;
-    protected int hp;
-    protected boolean isDead;
-    protected float stateTime;
+    public Animation<TextureRegion> animation;
+    public float x, y;
+    public float speed;
+    public int hp;
+    public boolean isDead;
+    public float stateTime;
 
     protected float width, height;
 
@@ -62,4 +62,8 @@ public abstract class Enemy {
             dropSeed();
         }
     }
+    public Vector2 getPosition() {
+        return new Vector2(x, y);
+    }
+
 }

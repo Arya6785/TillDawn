@@ -44,15 +44,15 @@ public class Tree extends Enemy{
 
     }
 
+    public Rectangle getBounds(){
+        return new Rectangle(x, y, WIDTH-90, HEIGHT-60);
+    }
     public void render(SpriteBatch batch) {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
         batch.draw(currentFrame, x, y, WIDTH, HEIGHT);
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, WIDTH, HEIGHT);
-    }
 
     @Override
     public void dropSeed() {

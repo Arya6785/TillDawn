@@ -1,19 +1,25 @@
 package com.tilldawn.Model;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.tilldawn.Model.Enums.HeroStats;
+import com.tilldawn.View.GameView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class Player extends Actor {
     public Animation<TextureRegion> idleAnim, walkAnim, runAnim;
@@ -26,11 +32,19 @@ public class Player extends Actor {
     public boolean invincible = false;
     public float invincibilityTime = 0;
     public final float Invincibility_Duration = 5f;
-    public Player(String characterName) {
+    public GunComponent gunComponent;
+    public GunSprite gunSprite;
+    public Gun gun;
+    public List<Bullet> bullets = new ArrayList<>();
+
+
+
+    public Player(String characterName, GameView view,Gun gun) {
         this.characterName = characterName;
         idleAnim = loadAnimation("Idle");
         walkAnim = loadAnimation("walk");
         runAnim = loadAnimation("run");
+        this.gun = gun;
         HeroStats stats = HeroStats.valueOf(characterName.toUpperCase());
         this.health = stats.health;
         this.speed = stats.speed;
@@ -39,6 +53,7 @@ public class Player extends Actor {
         float originalWidth = firstFrame.getRegionWidth();
         float originalHeight = firstFrame.getRegionHeight();
         setSize(originalWidth * 3.5f, originalHeight * 3.5f);
+        this.gunSprite = new GunSprite(gun.name);
     }
     private Animation<TextureRegion> loadAnimation(String state) {
         try {
@@ -62,6 +77,17 @@ public class Player extends Actor {
             return null;
         }
     }
+    public void updateGun(GameView view) {
+        Vector3 mouseWorld = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        view.camera.unproject(mouseWorld); // اگه دوربین داری
+
+        gunComponent.updatePositionAndRotation(getX(), getY(), mouseWorld.x, mouseWorld.y);
+    }
+
+    public void renderGun(SpriteBatch batch) {
+        gunComponent.render(batch);
+    }
+
     private boolean facingRight = true;
 
     public void setFacingRight(boolean right) {
