@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.tilldawn.Model.Enums.Ability;
 import com.tilldawn.Model.Enums.HeroStats;
 import com.tilldawn.View.GameView;
 
@@ -27,16 +28,45 @@ public class Player extends Actor {
     public String currentState = "Idle";
     public String characterName;
     public int health;
-    public int speed;
+    public float speed;
     public int maxHealth;
     public boolean invincible = false;
     public float invincibilityTime = 0;
-    public final float Invincibility_Duration = 5f;
+    public final float Invincibility_Duration = 2f;
     public GunComponent gunComponent;
     public GunSprite gunSprite;
     public Gun gun;
     public List<Bullet> bullets = new ArrayList<>();
+    public int KillCount = 0;
+    public int SecondsSurvived = 0;
+    public int xp = 0;
+    public int level = 0;
+    public void addXP(int amount,GameView view) {
+        xp += amount;
+        checkLevelUp(view);
+    }
 
+    private void checkLevelUp(GameView view) {
+        int requiredXP = calculateRequiredXP(level);
+        while (xp >= requiredXP) {
+            xp -= requiredXP;
+            level++;
+            onLevelUp(view);
+            requiredXP = calculateRequiredXP(level);
+        }
+    }
+
+    private int calculateRequiredXP(int currentLevel) {
+        // exp لازم برای رفتن از لول i به i+1 برابر i*20 است
+        return currentLevel * 20;
+    }
+
+    private void onLevelUp(GameView view) {
+        Ability newAbility = Ability.getRandomAbility();
+        view.controller.grantAbility(view,Ability.SPEEDY);
+
+        // اینجا باید ابیلیت‌ها رو به کاربر بده
+    }
 
 
     public Player(String characterName, GameView view,Gun gun) {

@@ -4,13 +4,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.tilldawn.Main;
 import com.tilldawn.Model.Enums.Menu;
+import com.tilldawn.View.GameView;
+import com.tilldawn.View.MainMenuView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AppData {
-    public static Menu currentMenu = Menu.MAINMENU;
-    public static ArrayList<User>  users= new ArrayList<>();
+    public static List<User> users= new ArrayList<>();
     public static User CurrentUser = null;
 
 

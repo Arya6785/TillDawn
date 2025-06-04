@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.tilldawn.Model.*;
+import com.tilldawn.Model.Enums.Ability;
 import com.tilldawn.View.GameView;
 
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class GameController {
             view.player.setState("run");
             moving = true;
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            view.player.gun.startReloading();
+        }
+
 
         if (!moving) {
             view.player.setState("Idle");
@@ -116,7 +121,7 @@ public class GameController {
         AppData.showMessage("You Have Died",view.mainMenuView.skin,view.mainMenuView.stage);
     }
     public void Shoot (GameView view) {
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)&& view.player.gun.currentAmmo > 0) {
             Vector2 center = view.player.gunSprite.getMuzzlePosition();
             Vector3 mouseWorld = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             view.camera.unproject(mouseWorld);
@@ -131,7 +136,9 @@ public class GameController {
                 Vector2 direction = new Vector2(targetDir).rotateDeg(angleOffset);
                 Bullet bullet = new Bullet(center, direction, view.player.gun.damage);
                 view.player.bullets.add(bullet);
+
             }
+            view.player.gun.currentAmmo-=1;
         }
 
     }
@@ -150,7 +157,7 @@ public class GameController {
                     if (enemy.hp <= 0) {
                         view.enemies.remove(enemy);
                         view.pickups.add(new HeartPickup(enemy.getPosition().cpy())); // فرض اینکه enemy.getPosition() هست
-
+                        view.player.KillCount += 1;
                         // دراپ دونه
                         // می‌تونی یک کلاس Seed هم درست کنی و تو لیست بندازی
                         break;
@@ -187,11 +194,54 @@ public class GameController {
             if (pickup.getBounds().contains(playerCenter)) {
                 view.pickups.remove(i);
                 i--; // چون از لیست حذف شد
+                view.player.addXP(3,view);
             }
         }
 
 
     }
+    public void updateEnemyProjectiles(GameView view, float delta) {
+        List<EyebatProjectile> toRemove = new ArrayList<>();
+
+        for (EyebatProjectile proj : view.enemyProjectiles) {
+            proj.update(delta);
+            if (proj.getBounds().overlaps(view.player.getBounds())) {
+                damage(view, proj.damage);
+                proj.deactivate();
+            }
+            if (!proj.active) toRemove.add(proj);
+        }
+        view.enemyProjectiles.removeAll(toRemove);
+        for (EyebatProjectile proj : view.enemyProjectiles) {
+            proj.render(view.batch);
+        }
+    }
+    public void grantAbility(GameView view,Ability ability) {
+        switch(ability) {
+            case VITALITY:
+                view.player.maxHealth += 1;
+                view.player.health += 1;
+                view.showTemporaryMessage("Your Max Hp was Increased");
+                break;
+            case DAMAGER:
+                view.player.gun.damage*= (5/4);
+                view.showTemporaryMessage("Your guns damage was Increased");
+                break;
+            case PROCLEASE:
+                view.player.gun.projectile += 1;
+                view.showTemporaryMessage("Your guns Projectiles was Increased");
+                break;
+            case AMOCREASE:
+                view.player.gun.maxAmmo+=5;
+                view.showTemporaryMessage("Your Max Ammo was Increased");
+                break;
+            case SPEEDY:
+                view.SpeedBoost();
+                view.showTemporaryMessage("Your Speed was Increased");
+                break;
+        }
+    }
+
 
 
 }

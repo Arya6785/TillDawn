@@ -66,6 +66,7 @@ public class MainMenuView implements Screen {
         registerButton.addListener(controller.SignUp());
         profileMenu.addListener(controller.Profile());
         PreGameMenu.addListener(controller.PreGame());
+        ScoreButton.addListener(controller.ScoreBoard());
     }
 
     @Override

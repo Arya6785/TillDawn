@@ -35,8 +35,6 @@ public class SignUpMenuView implements Screen {
 
         skin = new Skin(Gdx.files.internal("Skin/pixthulhu-ui.json"));
 
-        Label username = new Label("Username", skin);
-        Label password = new Label("Password", skin);
 
         TextField PasswordField = new TextField("", skin);
         PasswordField.setMessageText("Enter your password");

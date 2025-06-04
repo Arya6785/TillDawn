@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Main;
+import com.tilldawn.Model.AppData;
 import com.tilldawn.Model.Gun;
+import com.tilldawn.Model.User;
 
 import javax.swing.event.ChangeListener;
 
@@ -21,6 +23,8 @@ public class PreGameView implements Screen {
     private Stage stage;
     public List<String> Heroes;
     public List<String> Guns;
+    public List<String> GameTimes;
+
 
 
     public PreGameView(Main game, MainMenuView mainMenuView) {
@@ -38,8 +42,8 @@ public class PreGameView implements Screen {
         Image backgroundImage = new Image(background);
 
         TextButton Play = new TextButton("Play", skin);
-
-        Play.addListener(new ClickListener() {
+        TextButton Skip = new TextButton("Skip", skin);
+        Skip.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event ,float x, float y) {
                 String selectedGunName = Guns.getSelected();
@@ -58,10 +62,41 @@ public class PreGameView implements Screen {
                     default:
                         selectedGun = new Gun("Revolver", 20, 1, 1, 6); // حالت پیش‌فرض
                 }
+                int selectedTime = Integer.parseInt(GameTimes.getSelected());
 
 
 
-                game.setScreen(new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView));
+                game.setScreen(new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,new User("","","","")));
+            }
+        });
+        Play.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event ,float x, float y) {
+                if (AppData.CurrentUser == null) {
+                    AppData.showMessage("You need to login first!",skin,stage);
+                    return;
+                }
+                String selectedGunName = Guns.getSelected();
+                Gun selectedGun;
+
+                switch (selectedGunName) {
+                    case "Revolver":
+                        selectedGun = new Gun("Revolver", 20, 1, 1, 6);
+                        break;
+                    case "Shotgun":
+                        selectedGun = new Gun("Shotgun", 10, 4, 1, 2);
+                        break;
+                    case "SMG Dual":
+                        selectedGun = new Gun("SMG Dual", 8, 1, 2, 24);
+                        break;
+                    default:
+                        selectedGun = new Gun("Revolver", 20, 1, 1, 6); // حالت پیش‌فرض
+                }
+                int selectedTime = Integer.parseInt(GameTimes.getSelected());
+
+
+
+                game.setScreen(new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,AppData.CurrentUser));
             }
         });
         Heroes = new List<>(skin);
@@ -78,6 +113,13 @@ public class PreGameView implements Screen {
             "Shotgun",
             "SMG Dual"
         );
+        GameTimes = new List<>(skin);
+        GameTimes.setItems("2", "5", "10", "20");
+
+        ScrollPane TimeChoose = new ScrollPane(GameTimes, skin);
+        TimeChoose.setFadeScrollBars(false);
+        TimeChoose.setScrollingDisabled(true, false);
+
 
         ScrollPane HeroChoose = new ScrollPane(Heroes, skin);
         ScrollPane GunChoose = new ScrollPane(Guns, skin);
@@ -88,7 +130,10 @@ public class PreGameView implements Screen {
         PreGameTable.row();
         PreGameTable.add(GunChoose);
         PreGameTable.row();
+        PreGameTable.add(TimeChoose);
         PreGameTable.add(Play);
+        PreGameTable.row();
+        PreGameTable.add(Skip);
         PreGameTable.setFillParent(true);
         stage.addActor(backgroundImage);
         stage.addActor(PreGameTable);

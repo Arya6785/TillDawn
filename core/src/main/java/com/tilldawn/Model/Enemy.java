@@ -23,6 +23,7 @@ public abstract class Enemy {
         this.stateTime = 0f;
         this.isDead = false;
 
+
         TextureRegion firstFrame = animation.getKeyFrame(0);
         this.width = firstFrame.getRegionWidth();
         this.height = firstFrame.getRegionHeight();

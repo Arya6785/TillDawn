@@ -8,12 +8,12 @@ public class Bullet {
     public Vector2 position;
     public Vector2 velocity;
     public float speed = 500f;
-    public int damage;
+    public float damage;
 
     private Texture texture;
     private boolean active = true;
 
-    public Bullet(Vector2 startPosition, Vector2 direction, int damage) {
+    public Bullet(Vector2 startPosition, Vector2 direction, float damage) {
         this.position = new Vector2(startPosition);
         this.velocity = direction.nor().scl(speed);
         this.damage = damage;

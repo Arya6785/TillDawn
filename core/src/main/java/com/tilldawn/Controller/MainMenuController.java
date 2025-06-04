@@ -48,4 +48,12 @@ public class MainMenuController {
             }
         };
     }
+    public ClickListener ScoreBoard(){
+        return new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                game.setScreen(new ScoreBoard(game,AppData.CurrentUser,AppData.users));
+            }
+        };
+    }
 }
