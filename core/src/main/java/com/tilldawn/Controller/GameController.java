@@ -137,9 +137,14 @@ public class GameController {
     }
     public void die(GameView view) {
         // هندل مرگ بازیکن
+
         view.player.SecondsSurvived = view.gameTimeMinutes *60 - view.gameTimer;
+        if (AppData.CurrentUser != null) {
+            AppData.CurrentUser.Score = AppData.CurrentGameView.player.getScore();
+        }
         view.game.setScreen(view.mainMenuView);
         AppData.showGameOverMessage(view.mainMenuView.skin,view.mainMenuView.stage);
+
         AppData.CurrentGameView = null;
         view.hide();
             return;
@@ -180,12 +185,12 @@ public class GameController {
 
                     if (enemy.hp <= 0) {
                         view.enemies.remove(enemy);
-                        view.pickups.add(new HeartPickup(enemy.getPosition().cpy())); // فرض اینکه enemy.getPosition() هست
+                        view.pickups.add(new HeartPickup(enemy.getPosition().cpy()));
                         view.player.KillCount += 1;
-                        // دراپ دونه
-                        // می‌تونی یک کلاس Seed هم درست کنی و تو لیست بندازی
+                        view.explosions.add(new Explosion(enemy.getPosition().cpy()));
                         break;
                     }
+
                 }
             }
 
@@ -298,7 +303,7 @@ public class GameController {
                 view.showTemporaryMessage("Your Max Hp was Increased");
                 break;
             case DAMAGER:
-                view.player.gun.damage*= (5/4);
+                view.player.gun.damage*=1.25f;
                 view.showTemporaryMessage("Your guns damage was Increased");
                 break;
             case PROCLEASE:

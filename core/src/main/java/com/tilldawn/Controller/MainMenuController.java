@@ -64,4 +64,13 @@ public class MainMenuController {
             }
         };
     }
+    public ClickListener Talent(){
+        return new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                game.setScreen(new Talent(game, AppData.users));
+            }
+        };
+    }
 }
+

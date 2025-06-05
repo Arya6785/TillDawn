@@ -58,6 +58,7 @@ public class GameView implements Screen {
     private Texture glowTexture;
     private float glowWidth = 105f;   // اندازه مناسب نسبت به پلیر، به دلخواه تغییر بده
     private float glowHeight = 105f;
+    public ArrayList<Explosion> explosions = new ArrayList<>();
 
 
 
@@ -131,6 +132,8 @@ public class GameView implements Screen {
     }
     @Override
     public void render(float delta) {
+
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             game.setScreen(new PauseMenuView(game,this,mainMenuView));
             return;
@@ -170,8 +173,15 @@ public class GameView implements Screen {
         if (gameTimer <= 0) {
             // زمان تمام شده، برگشت به منوی اصلی
             player.SecondsSurvived = gameTimeMinutes * 60f;
+            if (AppData.CurrentUser != null) {
+                AppData.CurrentUser.Score = AppData.CurrentGameView.player.getScore();
+            }
             game.setScreen(mainMenuView);
             AppData.showVictoryMessage(mainMenuView.skin, mainMenuView.stage);
+            if (AppData.CurrentUser != null) {
+                AppData.CurrentUser.KillCount =AppData.CurrentGameView.player.KillCount;
+                AppData.CurrentUser.SecondsSurvived = AppData.CurrentGameView.player.SecondsSurvived;
+            }
             AppData.CurrentGameView = null;
             hide();
             return;
@@ -246,6 +256,15 @@ public class GameView implements Screen {
 
         if (temporaryMessage != null) {
             font.draw(batch, temporaryMessage, camera.position.x +700, camera.position.y + 200);
+        }
+        for (int i = 0; i < explosions.size(); i++) {
+            Explosion ex = explosions.get(i);
+            ex.update(delta);
+            ex.render(batch);
+            if (ex.isFinished()) {
+                explosions.remove(i);
+                i--;
+            }
         }
 
 

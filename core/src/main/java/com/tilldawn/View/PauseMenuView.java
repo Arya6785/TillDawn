@@ -30,7 +30,12 @@ public class PauseMenuView implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("Skin/pixthulhu-ui.json"));
-
+        Label CheatCodes = new Label("CheatCodes : \n" +
+            "Time : Reduces game time by 1 minutes\n" +
+            "Level : Adds 1 level to player\n" +
+            "Boss : Spawns Elder Boss\n" +
+            "Hp : Adds 1 Health point\n" +
+            "Damage : Increases gun damage\n", skin);
         Texture background = new Texture("background.png");
         Image bgImage = new Image(background);
         bgImage.setFillParent(true);
@@ -61,9 +66,11 @@ public class PauseMenuView implements Screen {
 
         table.add(title).padBottom(30);
         table.row();
-        table.add(continueBtn).width(200).pad(10);
+        table.add(continueBtn).width(300).pad(10);
         table.row();
-        table.add(giveUpBtn).width(200).pad(10);
+        table.add(giveUpBtn).width(300).pad(10);
+        table.row();
+        table.add(CheatCodes).width(200).pad(10);
 
         stage.addActor(table);
     }

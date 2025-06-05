@@ -36,7 +36,7 @@ public class MainMenuView implements Screen {
         Label Score = null;
         if (AppData.CurrentUser != null) {
            Name= new Label(AppData.CurrentUser.username, skin);
-            Score =new Label("Score : "+AppData.CurrentUser.getScore(),skin);
+            Score =new Label("Score : "+AppData.CurrentUser.Score,skin);
         }
 
         TextButton loginButton = new TextButton("Login", skin);
@@ -84,6 +84,7 @@ public class MainMenuView implements Screen {
         PreGameMenu.addListener(controller.PreGame());
         ScoreButton.addListener(controller.ScoreBoard());
         SettingsButton.addListener(controller.Settings());
+        Talent.addListener(controller.Talent());
 
     }
 

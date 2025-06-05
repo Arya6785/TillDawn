@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.tilldawn.Model.Explosion;
 import com.tilldawn.View.MainMenuView;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -18,6 +19,7 @@ public class Main extends Game {
     public void create() {
         main = this;
         batch = new SpriteBatch();
+        Explosion.loadAssets();
         setScreen(new MainMenuView(this));
     }
 

@@ -14,6 +14,7 @@ public class User {
         SecurityAnswer = answer;
         this.Question = Question;
     }
+    public int Score;
     public String SecurityAnswer;
     public String Question;
     public String getUsername() {
@@ -27,14 +28,14 @@ public class User {
 
     public Player player;
     public int KillCount = 0;
-    public int SecondsSurvived = 0;
+    public float SecondsSurvived = 0;
     public int getKills() {
         return KillCount;
     }
-    public int getSecondsSurvived() {
+    public float getSecondsSurvived() {
         return SecondsSurvived;
     }
-    public int getScore() {
+    public float getScore() {
         return KillCount*SecondsSurvived;
     }
 }
