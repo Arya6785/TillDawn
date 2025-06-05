@@ -16,7 +16,6 @@ public class SettingMenuView implements Screen {
     private Stage stage;
     private Skin skin;
     private Main game;
-
     private TextField moveUpField, moveDownField, moveLeftField, moveRightField, reloadField;
     private Preferences prefs;
     public SettingMenuView(Main game) {
@@ -37,6 +36,7 @@ public class SettingMenuView implements Screen {
         musicSelect.setSelected(currentMusic);
 
         TextButton Back = new TextButton("Back", skin);
+        CheckBox sfxCheck = new CheckBox("  SFX", skin);
         Back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuView(game));
@@ -73,6 +73,9 @@ public class SettingMenuView implements Screen {
         table.add(reloadField).width(100).pad(5);
         table.row();
         table.add(musicSelect).width(100).pad(5);
+        table.row();
+        table.add(sfxCheck).width(100).pad(5);
+        table.row();
 
         TextButton saveButton = new TextButton("Save Settings", skin);
         table.add(saveButton).colspan(2).padTop(20);

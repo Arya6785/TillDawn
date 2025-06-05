@@ -16,6 +16,7 @@ public class GameController {
 
     public void handleInput(GameView view) {
         boolean moving = false;
+        //checkCheat(view);
         Preferences prefs = Gdx.app.getPreferences("TillDawnSettings");
         int up = Input.Keys.valueOf(prefs.getString("moveUp", "W"));
         int down = Input.Keys.valueOf(prefs.getString("moveDown", "S"));
@@ -116,6 +117,12 @@ public class GameController {
         }
         return false;
     }
+    public boolean checkCollision3(HeartPickup pickup , Player player) {
+        if (player.getBounds().overlaps(pickup.getBounds())) {
+            return true;
+        }
+        return false;
+    }
     public void damage(GameView view,int amount) {
         if (!view.player.invincible) {
             view.player.health -= amount;
@@ -208,13 +215,63 @@ public class GameController {
         Vector2 playerCenter = view.player.getCenter();
         for (int i = 0; i < view.pickups.size(); i++) {
             HeartPickup pickup = view.pickups.get(i);
-            if (pickup.getBounds().contains(playerCenter)) {
+            if (checkCollision3(pickup, view.player)) {
                 view.pickups.remove(i);
                 i--; // چون از لیست حذف شد
                 view.player.addXP(3,view);
             }
         }
 
+
+    }
+    public void checkCheat(GameView view) {
+        for (int i = 0; i < 256; i++) {
+            if (Gdx.input.isKeyJustPressed(i)) {
+                char c = (char) i;
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ) {
+                    view.typedText += c;
+                }
+
+
+                // اگر Enter زده شد
+                if (i == Input.Keys.ENTER) {
+                    System.out.println("ENTER PRESSED! typedText: " + view.typedText);
+
+                    String command = view.typedText.toLowerCase().trim();
+
+                    if (command.equalsIgnoreCase("time")) {
+                        view.gameTimer -= 60f; // کم کردن یک دقیقه
+                        view.showTemporaryMessage("Time reduced");
+
+                        System.out.println("1 minute removed! Remaining: " + view.gameTimer);
+                    }
+                    if (view.typedText.equalsIgnoreCase("level")) {
+                        if (view.player.health < view.player.maxHealth) {
+                            view.player.health +=1;
+                            view.showTemporaryMessage("Hp Added");
+                        }
+                        else {
+                            view.showTemporaryMessage("You are at max health");
+                        }
+                    }
+                    if (view.typedText.equalsIgnoreCase("level")) {
+                        view.player.xp =0;
+                        view.player.level++;
+                        view.player.onLevelUp(view);
+                    }
+                    if (view.typedText.equalsIgnoreCase("boss")) {
+                        view.enemySpawner.spawnElder();
+                    }
+
+                    view.typedText = ""; // پاک کردن ورودی
+                }
+
+                // اگر Backspace زده شد
+                if (i == Input.Keys.BACKSPACE && view.typedText.length() > 0) {
+                    view.typedText = view.typedText.substring(0, view.typedText.length() - 1);
+                }
+            }
+        }
 
     }
     public void updateEnemyProjectiles(GameView view, float delta) {

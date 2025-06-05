@@ -12,7 +12,7 @@ public abstract class Enemy {
     public boolean isDead;
     public float stateTime;
 
-    protected float width, height;
+    public float width, height;
 
     public Enemy(float x, float y, float speed, int hp, Animation<TextureRegion> animation) {
         this.x = x;
@@ -42,7 +42,7 @@ public abstract class Enemy {
     public void render(SpriteBatch batch) {
         if (!isDead) {
             TextureRegion frame = animation.getKeyFrame(stateTime, true);
-            batch.draw(frame, x, y);
+            batch.draw(frame, x, y,width,height);
         }
     }
 

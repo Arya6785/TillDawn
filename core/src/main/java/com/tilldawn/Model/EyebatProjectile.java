@@ -10,7 +10,7 @@ public class EyebatProjectile {
     public int damage;
     public boolean active = true;
     private TextureRegion texture;
-    private float speed = 200;
+    private float speed = 140;
 
     public EyebatProjectile(Vector2 pos, Vector2 dir, int damage, TextureRegion texture) {
         this.position = pos;

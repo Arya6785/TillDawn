@@ -19,19 +19,27 @@ public class EnemySpawner {
 
     private final Animation<TextureRegion> enemyRAnimation;
     private final Animation<TextureRegion> eyebatAnimation;
+    private final Animation<TextureRegion> ElderAnimation;
+
     private final TextureRegion eyebatProjectileTexture;
 
-    private float spawnTimer = 0f;
-    private float spawnRate = 1f;
     private float timeSinceStart = 0f;
-
+    private float enemyRSpawnTimer = 3f;
     private float eyebatSpawnTimer = 0f;
-    private final float eyebatSpawnDelay = 30f; // 1/4 کل زمان بازی فرض شده
+    private final float eyebatSpawnDelay ;
+    private final float ElderSpawnDelay ;
+    private boolean elderSpawned = false;
 
-    public EnemySpawner(List<Tree> trees, List<Enemy> enemies) {
+    // 1/4 کل زمان بازی فرض شده
+
+    public EnemySpawner(List<Tree> trees, List<Enemy> enemies,GameView view) {
         this.enemies = enemies;
         this.enemyRAnimation = EnemyR.loadAnimation();
         this.eyebatAnimation = Eyebat.loadAnimation();
+        this.ElderAnimation = EnemyElder.loadAnimation();
+        this.eyebatSpawnDelay = view.gameTimeMinutes * 15f;
+        this.ElderSpawnDelay = view.gameTimeMinutes * 30f;
+
 
         // بارگذاری تکسچر تیر eyebat
         eyebatProjectileTexture = new TextureRegion(new Texture("EyeMonsterProjecitle.png"));
@@ -39,13 +47,10 @@ public class EnemySpawner {
 
     public void update(Vector2 playerPos, float delta, GameView view) {
         timeSinceStart += delta;
-        spawnTimer += delta;
+        enemyRSpawnTimer+=delta;
 
         // اسپاون دشمن معمولی
-        if (spawnTimer >= spawnRate) {
-            spawnTimer = 0f;
-            spawnEnemyR();
-        }
+
 
 
 
@@ -55,6 +60,9 @@ public class EnemySpawner {
                 ((Eyebat) enemy).update(playerPos, delta, view);
 
             }
+            else if (enemy instanceof EnemyElder){
+                ((EnemyElder)enemy).update(playerPos, delta, view);
+            }
             else {
                 enemy.update(playerPos, delta);
 
@@ -62,14 +70,33 @@ public class EnemySpawner {
         }
 
         enemies.removeIf(Enemy::isDead);
+        if (enemyRSpawnTimer >=3f){
+            enemyRSpawnTimer = 0f;
+            float n = timeSinceStart/10;
+            int n2 = MathUtils.floor(n);
+            for (int i = 0; i < n2; i++) {
+                spawnEnemyR();
+            }
 
+        }
         // اسپاون Eyebat بعد از یک چهارم اول بازی
         if (timeSinceStart > eyebatSpawnDelay) {
             eyebatSpawnTimer += delta;
             if (eyebatSpawnTimer >= 10f) {
                 eyebatSpawnTimer = 0f;
-                spawnEyebat();
+                float n = (4*timeSinceStart - view.gameTimeMinutes*60f + 30)/40;
+                int n2 = MathUtils.floor(n);
+                for (int i = 0; i < n2; i++) {
+                    spawnEyebat();
+                }
             }
+        }
+        if (timeSinceStart > ElderSpawnDelay) {
+            if (!elderSpawned) {
+                spawnElder();
+                elderSpawned = true;
+            }
+
         }
     }
 
@@ -87,6 +114,11 @@ public class EnemySpawner {
     private void spawnEyebat() {
         Vector2 pos = getRandomEdgePosition();
         enemies.add(new Eyebat(pos.x, pos.y, eyebatAnimation, eyebatProjectileTexture));
+    }
+    public void spawnElder() {
+        Vector2 pos = getRandomEdgePosition();
+        enemies.add(new EnemyElder(pos.x, pos.y, ElderAnimation));
+
     }
 
     private Vector2 getRandomEdgePosition() {

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 public class EnemyR extends Enemy {
     public EnemyR(float x, float y, Animation<TextureRegion> animation) {
         super(x, y, 85f, 25, animation);
+        this.width = 65f;
+        this.height = 85f;
     }
 
     @Override

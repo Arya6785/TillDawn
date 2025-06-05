@@ -61,7 +61,7 @@ public class Player extends Actor {
         return (currentLevel+1) * 20;
     }
 
-    private void onLevelUp(GameView view) {
+    public void onLevelUp(GameView view) {
         Ability newAbility = Ability.getRandomAbility();
         view.controller.grantAbility(view,newAbility);
 
