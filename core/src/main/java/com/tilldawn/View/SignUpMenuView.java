@@ -74,7 +74,10 @@ public class SignUpMenuView implements Screen {
 
                 if (result.equals("OK")) {
                     AppData.showMessage("You have signed up successfully" ,skin ,stage);
-                    AppData.users.add(new User(username,password,answer,Question));
+                    User newUser = new User(username,password,answer,Question);
+                    newUser.avatarTexture = newUser.getRandomAvatarTexture();
+                    AppData.users.add(newUser);
+
 
                 } else {
                     Dialog dialog = new Dialog("Error", skin);

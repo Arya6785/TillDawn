@@ -34,7 +34,9 @@ public class ProfileMenuView implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.center();
-
+        SelectBox<String> Avatar = new SelectBox<>(skin);
+        TextButton AvatarChange = new TextButton("Change Avatar", skin);
+        Avatar.setItems("avatar1", "avatar2", "avatar3", "avatar4", "avatar5");
         usernameField.setMessageText("New Username");
         passwordField.setMessageText("New Password");
         confirmPasswordField.setMessageText("Confirm Password");
@@ -90,10 +92,23 @@ public class ProfileMenuView implements Screen {
             }
         });
 
+
+
         backBtn.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 // برگرد به صفحه قبل
                 game.setScreen(new MainMenuView(game));
+            }
+        });
+
+        AvatarChange.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (AppData.CurrentUser == null) {
+                    AppData.showMessage("No user is currently logged in.", skin, stage);
+                    return;
+                }
+                AppData.CurrentUser.avatarTexture = new Texture(Gdx.files.internal("Avatars/" + Avatar.getSelected()+".png"));
+                AppData.showMessage("Avatar Changed successfully.", skin, stage);
             }
         });
 
@@ -102,6 +117,8 @@ public class ProfileMenuView implements Screen {
         table.add(passwordField).width(300).pad(10); table.row();
         table.add(confirmPasswordField).width(300).pad(10); table.row();
         table.add(changePasswordBtn).width(500).pad(10); table.row();
+        table.add(Avatar).width(300).pad(10); table.row();
+        table.add(AvatarChange).width(500).pad(10); table.row();
         table.add(TerminateUser).width(500).pad(10); table.row();
         table.add(backBtn).width(300).pad(10);
         stage.addActor(backgroundImage);

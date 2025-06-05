@@ -5,13 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tilldawn.Controller.MainMenuController;
 import com.tilldawn.Main;
+import com.tilldawn.Model.AppData;
 
 public class MainMenuView implements Screen {
     public final Main game;
@@ -34,6 +32,12 @@ public class MainMenuView implements Screen {
         Texture background = new Texture(Gdx.files.internal("background.png"));
         Image backgroundImage = new Image(background);
         backgroundImage.setFillParent(true);
+        Label Name = null;
+        Label Score = null;
+        if (AppData.CurrentUser != null) {
+           Name= new Label(AppData.CurrentUser.username, skin);
+            Score =new Label("Score : "+AppData.CurrentUser.getScore(),skin);
+        }
 
         TextButton loginButton = new TextButton("Login", skin);
         TextButton registerButton = new TextButton("SignUp", skin);
@@ -42,11 +46,21 @@ public class MainMenuView implements Screen {
         TextButton PreGameMenu = new TextButton("Pregame", skin);
         TextButton Talent = new TextButton("Talent", skin);
         TextButton SettingsButton = new TextButton("Settings", skin);
-
         Table MainMenuTable = new Table();
         MainMenuTable.setFillParent(true);
 
         MainMenuTable.center();
+        Image Avatar =null;
+        if (AppData.CurrentUser != null) {
+            Avatar = new Image(AppData.CurrentUser.avatarTexture);
+            MainMenuTable.add(Avatar);
+            MainMenuTable.row();
+            MainMenuTable.add(Name);
+            MainMenuTable.row();
+            MainMenuTable.add(Score);
+            MainMenuTable.row();
+        }
+
         MainMenuTable.add(loginButton).width(300).height(80).pad(15);
         MainMenuTable.row();
         MainMenuTable.add(registerButton).width(300).height(80).pad(15);

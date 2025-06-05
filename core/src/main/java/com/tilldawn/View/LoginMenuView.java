@@ -113,6 +113,8 @@ public class LoginMenuView implements Screen {
         LoginTable.add(Back).width(350).pad(10);
         LoginTable.row();
         LoginTable.add(Forgot).width(450).pad(10);
+        LoginTable.row();
+        LoginTable.add(Logout).width(450).pad(10);
 
         stage.addActor(backgroundImage);
 
