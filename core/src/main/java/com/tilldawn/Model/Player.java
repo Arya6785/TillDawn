@@ -58,7 +58,7 @@ public class Player extends Actor {
 
     private int calculateRequiredXP(int currentLevel) {
         // exp لازم برای رفتن از لول i به i+1 برابر i*20 است
-        return currentLevel * 20;
+        return (currentLevel+1) * 20;
     }
 
     private void onLevelUp(GameView view) {

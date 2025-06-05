@@ -43,7 +43,7 @@ public class LoginMenuView implements Screen {
         TextButton Login = new TextButton("Login", skin);
         TextButton Back = new TextButton("Back", skin);
         TextButton Forgot = new TextButton("Forgot Password", skin);
-
+        TextButton Logout = new TextButton("Logout", skin);
         Login.addListener(new ClickListener() {
 
             @Override
@@ -54,6 +54,7 @@ public class LoginMenuView implements Screen {
 
                 if (result == "OK") {
                     AppData.CurrentUser = controller.getUser(username);
+                    AppData.showMessage("Logged in" , skin, stage);
                     // game start
                 }
                 else {
@@ -65,6 +66,12 @@ public class LoginMenuView implements Screen {
                     dialog.show(stage);
                 }
 
+            }
+        });
+        Logout.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                AppData.CurrentUser = null;
+                AppData.showMessage("Logged out" , skin, stage);
             }
         });
 

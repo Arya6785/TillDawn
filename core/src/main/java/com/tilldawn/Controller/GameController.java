@@ -2,6 +2,7 @@ package com.tilldawn.Controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.tilldawn.Model.*;
@@ -15,30 +16,36 @@ public class GameController {
 
     public void handleInput(GameView view) {
         boolean moving = false;
+        Preferences prefs = Gdx.app.getPreferences("TillDawnSettings");
+        int up = Input.Keys.valueOf(prefs.getString("moveUp", "W"));
+        int down = Input.Keys.valueOf(prefs.getString("moveDown", "S"));
+        int left = Input.Keys.valueOf(prefs.getString("moveLeft", "A"));
+        int right = Input.Keys.valueOf(prefs.getString("moveRight", "D"));
+        int reload = Input.Keys.valueOf(prefs.getString("reload", "R"));
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(left)) {
             view.player.moveBy(-view.player.speed, 0);
             view.player.setState("run");
             view.player.setFacingRight(false);
             moving = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(right)) {
             view.player.moveBy(view.player.speed, 0);
             view.player.setState("run");
             view.player.setFacingRight(true);
             moving = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(up)) {
             view.player.moveBy(0, view.player.speed);
             view.player.setState("run");
             moving = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(down)) {
             view.player.moveBy(0, -view.player.speed);
             view.player.setState("run");
             moving = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        if (Gdx.input.isKeyJustPressed(reload)) {
             view.player.gun.startReloading();
         }
 
@@ -103,6 +110,12 @@ public class GameController {
         }
 
     }
+    public boolean checkCollision2(Bullet bullet , Enemy enemy) {
+        if (enemy.getBounds().overlaps(bullet.getBounds())) {
+            return true;
+        }
+        return false;
+    }
     public void damage(GameView view,int amount) {
         if (!view.player.invincible) {
             view.player.health -= amount;
@@ -120,6 +133,8 @@ public class GameController {
         view.player.SecondsSurvived = view.gameTimeMinutes *60 - view.gameTimer;
         view.game.setScreen(view.mainMenuView);
         AppData.showGameOverMessage(view.mainMenuView.skin,view.mainMenuView.stage);
+        AppData.CurrentGameView = null;
+        view.hide();
             return;
     }
     public void Shoot (GameView view) {
@@ -152,7 +167,7 @@ public class GameController {
             bullet.update(delta);
 
             for (Enemy enemy : view.enemies) {
-                if (enemy.getBounds().contains(bullet.position)) {
+                if (checkCollision2(bullet,enemy)) {
                     enemy.hp -= bullet.damage;
                     bullet.deactivate();
 

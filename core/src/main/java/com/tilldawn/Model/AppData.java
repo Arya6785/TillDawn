@@ -16,7 +16,7 @@ public class AppData {
     public static List<User> users= new ArrayList<>();
     public static User CurrentUser = null;
     public static GameView CurrentGameView = null ;
-
+    public static String userName = "";
     public static boolean isUsernameTaken(String newUsername) {
         for (User user : users) {
             if (user.getUsername().equals(newUsername)) {
@@ -34,7 +34,10 @@ public class AppData {
         dialog.show(stage);
     }
     public static void showVictoryMessage( Skin skin, Stage stage) {
-        String Msg = "You Have Won!\n"+
+        if (CurrentUser != null) {
+            userName = CurrentUser.getUsername();
+        }
+        String Msg = "You Have Won! "+ userName + "\n"+
             "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
         Dialog dialog = new Dialog(" ", skin);
         Label label = new Label(Msg, skin);
@@ -44,7 +47,10 @@ public class AppData {
         dialog.show(stage);
     }
     public static void showGameOverMessage( Skin skin, Stage stage) {
-        String Msg = "You Have Lost\n" +
+        if (AppData.CurrentUser != null){
+            AppData.userName = AppData.CurrentUser.username;
+        }
+        String Msg = "You Have Lost " + userName +"\n"+
             "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
         Dialog dialog = new Dialog(" ", skin);
         Label label = new Label(Msg, skin);

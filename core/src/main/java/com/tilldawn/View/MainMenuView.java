@@ -41,6 +41,7 @@ public class MainMenuView implements Screen {
         TextButton ScoreButton = new TextButton("ScoreBoard", skin);
         TextButton PreGameMenu = new TextButton("Pregame", skin);
         TextButton Talent = new TextButton("Talent", skin);
+        TextButton SettingsButton = new TextButton("Settings", skin);
 
         Table MainMenuTable = new Table();
         MainMenuTable.setFillParent(true);
@@ -58,6 +59,7 @@ public class MainMenuView implements Screen {
         MainMenuTable.row();
         MainMenuTable.add(Talent).width(300).height(80).pad(15);
         MainMenuTable.row();
+        MainMenuTable.add(SettingsButton).width(300).height(80).pad(15);
         stage.addActor(backgroundImage);
         stage.addActor(MainMenuTable);
 
@@ -67,6 +69,8 @@ public class MainMenuView implements Screen {
         profileMenu.addListener(controller.Profile());
         PreGameMenu.addListener(controller.PreGame());
         ScoreButton.addListener(controller.ScoreBoard());
+        SettingsButton.addListener(controller.Settings());
+
     }
 
     @Override

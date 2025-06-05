@@ -2,6 +2,7 @@ package com.tilldawn.Model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet {
@@ -29,6 +30,11 @@ public class Bullet {
             batch.draw(texture, position.x - 4, position.y - 4, 50, 50);
         }
     }
+    public Rectangle getBounds() {
+        return new Rectangle(position.x - 4, position.y - 4, 50, 50);
+    }
+
+
 
     public void deactivate() {
         active = false;

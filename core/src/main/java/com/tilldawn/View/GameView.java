@@ -2,9 +2,12 @@ package com.tilldawn.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +23,7 @@ import com.tilldawn.Main;
 import com.tilldawn.Model.*;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +52,11 @@ public class GameView implements Screen {
     private boolean speedBoost = false;
     private boolean speedBoostdone = false;
     public int gameTimeMinutes;
+    public boolean paused = false;
+    private Window pauseMenuWindow;
+    private Music backgroundMusic;
+
+
 
     public GameView(Main game, String selectedHero,Gun selectedGun,MainMenuView mainMenuView,int gameTimeMinutes,User user) {
         this.game = game;
@@ -60,6 +69,9 @@ public class GameView implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
         stage = new Stage(new ScreenViewport(camera));
+
+
+
         treeAnimation = Tree.loadAnimation();
 
         for (int i = 0; i < 10; i++) {
@@ -86,6 +98,18 @@ public class GameView implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        Pixmap pixmap = new Pixmap(Gdx.files.internal("T_Cursor.png")); // بارگذاری تصویر
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pixmap, 0, 0));   // تنظیم تصویر به عنوان موس
+        pixmap.dispose(); // آزادسازی منابع
+        Preferences prefs = Gdx.app.getPreferences("TillDawnSettings");
+        String selectedMusic = prefs.getString("music", "music1.mp3");
+
+        if (backgroundMusic != null) backgroundMusic.dispose();  // اطمینان از خالی بودن قبلی
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal( selectedMusic));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.5f);
+        backgroundMusic.play();
     }
     public void showTemporaryMessage(String message) {
         temporaryMessage = message;
@@ -97,6 +121,12 @@ public class GameView implements Screen {
     }
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            game.setScreen(new PauseMenuView(game,this,mainMenuView));
+            return;
+        }
+
+
         controller.handleInput(this);
         updateCamera();
 
@@ -132,6 +162,7 @@ public class GameView implements Screen {
             game.setScreen(mainMenuView);
             AppData.showVictoryMessage(mainMenuView.skin, mainMenuView.stage);
             AppData.CurrentGameView = null;
+            hide();
             return;
         }
         if (player.gun.currentAmmo ==0){
@@ -230,12 +261,18 @@ public class GameView implements Screen {
 
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+    @Override public void hide() {
+        if (backgroundMusic != null) {
+            backgroundMusic.stop();
+        }
+    }
 
     @Override
     public void dispose() {
         stage.dispose();
         background.dispose();
         batch.dispose();
+        if (backgroundMusic != null) backgroundMusic.dispose();
+
     }
 }
