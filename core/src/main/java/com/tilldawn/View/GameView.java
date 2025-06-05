@@ -47,11 +47,13 @@ public class GameView implements Screen {
     private float SpeedBoostTime = 0f;
     private boolean speedBoost = false;
     private boolean speedBoostdone = false;
+    public int gameTimeMinutes;
 
     public GameView(Main game, String selectedHero,Gun selectedGun,MainMenuView mainMenuView,int gameTimeMinutes,User user) {
         this.game = game;
         this.mainMenuView = mainMenuView;
         this.gameTimer = gameTimeMinutes * 60f;
+        this.gameTimeMinutes = gameTimeMinutes;
         font = new BitmapFont();
         font.getData().setScale(2);
         enemySpawner = new EnemySpawner(trees,enemies);
@@ -126,6 +128,7 @@ public class GameView implements Screen {
         gameTimer -= delta;
         if (gameTimer <= 0) {
             // زمان تمام شده، برگشت به منوی اصلی
+            player.SecondsSurvived = gameTimeMinutes * 60f;
             game.setScreen(mainMenuView);
             AppData.showVictoryMessage(mainMenuView.skin, mainMenuView.stage);
             AppData.CurrentGameView = null;

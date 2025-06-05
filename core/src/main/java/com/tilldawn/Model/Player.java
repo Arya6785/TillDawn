@@ -38,7 +38,7 @@ public class Player extends Actor {
     public Gun gun;
     public List<Bullet> bullets = new ArrayList<>();
     public int KillCount = 0;
-    public int SecondsSurvived = 0;
+    public float SecondsSurvived = 0;
     public int xp = 0;
     public int level = 0;
     public void addXP(int amount,GameView view) {
@@ -63,12 +63,13 @@ public class Player extends Actor {
 
     private void onLevelUp(GameView view) {
         Ability newAbility = Ability.getRandomAbility();
-        view.controller.grantAbility(view,Ability.SPEEDY);
+        view.controller.grantAbility(view,newAbility);
 
         // اینجا باید ابیلیت‌ها رو به کاربر بده
     }
     public int getScore() {
-        return KillCount*SecondsSurvived;
+        int s = (int) (SecondsSurvived);
+        return KillCount*s ;
     }
 
 

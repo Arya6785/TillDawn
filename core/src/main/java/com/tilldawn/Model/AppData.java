@@ -34,7 +34,7 @@ public class AppData {
         dialog.show(stage);
     }
     public static void showVictoryMessage( Skin skin, Stage stage) {
-        String Msg = "You Have Won!" +
+        String Msg = "You Have Won!\n"+
             "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
         Dialog dialog = new Dialog(" ", skin);
         Label label = new Label(Msg, skin);
@@ -44,7 +44,7 @@ public class AppData {
         dialog.show(stage);
     }
     public static void showGameOverMessage( Skin skin, Stage stage) {
-        String Msg = "You Have Lost" +
+        String Msg = "You Have Lost\n" +
             "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
         Dialog dialog = new Dialog(" ", skin);
         Label label = new Label(Msg, skin);

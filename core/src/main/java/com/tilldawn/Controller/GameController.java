@@ -117,6 +117,7 @@ public class GameController {
     }
     public void die(GameView view) {
         // هندل مرگ بازیکن
+        view.player.SecondsSurvived = view.gameTimeMinutes *60 - view.gameTimer;
         view.game.setScreen(view.mainMenuView);
         AppData.showGameOverMessage(view.mainMenuView.skin,view.mainMenuView.stage);
             return;
