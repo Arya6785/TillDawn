@@ -118,7 +118,8 @@ public class GameController {
     public void die(GameView view) {
         // هندل مرگ بازیکن
         view.game.setScreen(view.mainMenuView);
-        AppData.showMessage("You Have Died",view.mainMenuView.skin,view.mainMenuView.stage);
+        AppData.showGameOverMessage(view.mainMenuView.skin,view.mainMenuView.stage);
+            return;
     }
     public void Shoot (GameView view) {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)&& view.player.gun.currentAmmo > 0) {

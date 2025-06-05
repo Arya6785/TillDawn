@@ -127,7 +127,8 @@ public class GameView implements Screen {
         if (gameTimer <= 0) {
             // زمان تمام شده، برگشت به منوی اصلی
             game.setScreen(mainMenuView);
-            AppData.showMessage("Congratulations , You Won!",mainMenuView.skin,mainMenuView.stage);
+            AppData.showVictoryMessage(mainMenuView.skin, mainMenuView.stage);
+            AppData.CurrentGameView = null;
             return;
         }
         if (player.gun.currentAmmo ==0){

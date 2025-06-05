@@ -15,7 +15,7 @@ import java.util.List;
 public class AppData {
     public static List<User> users= new ArrayList<>();
     public static User CurrentUser = null;
-
+    public static GameView CurrentGameView = null ;
 
     public static boolean isUsernameTaken(String newUsername) {
         for (User user : users) {
@@ -33,5 +33,26 @@ public class AppData {
         dialog.button("OK");
         dialog.show(stage);
     }
+    public static void showVictoryMessage( Skin skin, Stage stage) {
+        String Msg = "You Have Won!" +
+            "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
+        Dialog dialog = new Dialog(" ", skin);
+        Label label = new Label(Msg, skin);
+        label.setFontScale(3f); // اگه بخوای بزرگ‌تر بشه
+        dialog.text(label);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+    public static void showGameOverMessage( Skin skin, Stage stage) {
+        String Msg = "You Have Lost" +
+            "Kills : " + AppData.CurrentGameView.player.KillCount + " Time Survied : " + AppData.CurrentGameView.player.SecondsSurvived + " Score : " + AppData.CurrentGameView.player.getScore();
+        Dialog dialog = new Dialog(" ", skin);
+        Label label = new Label(Msg, skin);
+        label.setFontScale(3f); // اگه بخوای بزرگ‌تر بشه
+        dialog.text(label);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
 
 }

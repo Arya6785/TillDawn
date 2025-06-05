@@ -67,6 +67,9 @@ public class Player extends Actor {
 
         // اینجا باید ابیلیت‌ها رو به کاربر بده
     }
+    public int getScore() {
+        return KillCount*SecondsSurvived;
+    }
 
 
     public Player(String characterName, GameView view,Gun gun) {

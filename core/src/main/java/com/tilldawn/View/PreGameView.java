@@ -63,10 +63,10 @@ public class PreGameView implements Screen {
                         selectedGun = new Gun("Revolver", 20, 1, 1, 6); // حالت پیش‌فرض
                 }
                 int selectedTime = Integer.parseInt(GameTimes.getSelected());
+                GameView newGameView = new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,new User("","","",""));
+                AppData.CurrentGameView =  newGameView;
 
-
-
-                game.setScreen(new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,new User("","","","")));
+                game.setScreen(newGameView);
             }
         });
         Play.addListener(new ClickListener() {
@@ -93,10 +93,10 @@ public class PreGameView implements Screen {
                         selectedGun = new Gun("Revolver", 20, 1, 1, 6); // حالت پیش‌فرض
                 }
                 int selectedTime = Integer.parseInt(GameTimes.getSelected());
+                GameView newGameView = new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,AppData.CurrentUser);
+                AppData.CurrentGameView  = newGameView;
 
-
-
-                game.setScreen(new GameView(game, Heroes.getSelected(), selectedGun, mainMenuView,selectedTime,AppData.CurrentUser));
+                game.setScreen(newGameView);
             }
         });
         Heroes = new List<>(skin);
