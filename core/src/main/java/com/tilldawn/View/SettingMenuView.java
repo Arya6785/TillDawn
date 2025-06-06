@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -26,8 +27,18 @@ public class SettingMenuView implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("Skin/pixthulhu-ui.json"));
+        Texture background = new Texture(Gdx.files.internal("background.png"));
+        Image backgroundImage = new Image(background);
+        backgroundImage.setFillParent(true);
 
         prefs = Gdx.app.getPreferences("TillDawnSettings");
+        Slider volumeSlider = new Slider(0, 1, 0.01f, false, skin);
+        volumeSlider.setValue(prefs.getFloat("musicVolume", 0.5f)); // مقدار پیش‌فرض
+
+        Label volumeLabel = new Label("Music Volume:", skin);
+        CheckBox autoReloadCheck = new CheckBox("  Auto Reload", skin);
+        autoReloadCheck.setChecked(prefs.getBoolean("autoReload", true));  // پیش‌فرض: فعال
+
         SelectBox<String> musicSelect = new SelectBox<>(skin);
         musicSelect.setItems("music1.mp3", "music2.mp3", "music3.mp3");
 
@@ -44,6 +55,7 @@ public class SettingMenuView implements Screen {
         });
         Table table = new Table();
         table.setFillParent(true);
+        stage.addActor(backgroundImage);
         stage.addActor(table);
 
         // Create text fields with current settings or defaults
@@ -76,6 +88,13 @@ public class SettingMenuView implements Screen {
         table.row();
         table.add(sfxCheck).width(100).pad(5);
         table.row();
+        table.add(volumeLabel).pad(5);
+        table.add(volumeSlider).width(150).pad(5);
+        table.row();
+
+        table.add(autoReloadCheck).colspan(2).pad(5);
+        table.row();
+
 
         TextButton saveButton = new TextButton("Save Settings", skin);
         table.add(saveButton).colspan(2).padTop(20);
@@ -91,6 +110,9 @@ public class SettingMenuView implements Screen {
                 prefs.putString("moveRight", moveRightField.getText().toUpperCase());
                 prefs.putString("reload", reloadField.getText().toUpperCase());
                 prefs.putString("music", musicSelect.getSelected());  // ذخیره موسیقی
+                prefs.putFloat("musicVolume", volumeSlider.getValue());
+                prefs.putBoolean("autoReload", autoReloadCheck.isChecked());
+
 
                 prefs.flush();
 

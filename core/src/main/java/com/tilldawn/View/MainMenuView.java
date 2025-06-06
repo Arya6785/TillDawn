@@ -46,6 +46,7 @@ public class MainMenuView implements Screen {
         TextButton PreGameMenu = new TextButton("Pregame", skin);
         TextButton Talent = new TextButton("Talent", skin);
         TextButton SettingsButton = new TextButton("Settings", skin);
+        TextButton ContButton = new TextButton("Continue", skin);
         Table MainMenuTable = new Table();
         MainMenuTable.setFillParent(true);
 
@@ -74,6 +75,8 @@ public class MainMenuView implements Screen {
         MainMenuTable.add(Talent).width(300).height(80).pad(15);
         MainMenuTable.row();
         MainMenuTable.add(SettingsButton).width(300).height(80).pad(15);
+        MainMenuTable.row();
+        MainMenuTable.add(ContButton).width(300).height(80).pad(15);
         stage.addActor(backgroundImage);
         stage.addActor(MainMenuTable);
 

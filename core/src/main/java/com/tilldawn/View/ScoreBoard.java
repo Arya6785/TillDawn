@@ -132,7 +132,7 @@ public class ScoreBoard implements Screen {
             Label rankLabel = new Label((i + 1) + "", skin);
             Label userLabel = new Label(u.getUsername(), skin);
             Label killsLabel = new Label(u.getKills() + "", skin);
-            Label timeLabel = new Label((int) u.getSecondsSurvived() + "s", skin);
+            Label timeLabel = new Label((int) u.getSecondsSurvived() + "", skin);
             Label scoreLabel = new Label(u.getScore() + "", skin);
 
             rankLabel.setColor(rowColor);

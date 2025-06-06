@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -21,7 +22,7 @@ public class Talent implements Screen {
     private Skin skin;
     private Main game;
     private User user;
-    private HashMap<String, User> registeredUsers;
+    private HashMap<String, User> registeredUsers = new HashMap<>();
 
     public Talent(Main game, List<User> Users) {
         this.game = game;
@@ -32,10 +33,13 @@ public class Talent implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
-
+        Texture background = new Texture(Gdx.files.internal("background.png"));
+        Image backgroundImage = new Image(background);
+        backgroundImage.setFillParent(true);
         Table table = new Table();
         table.setFillParent(true);
         table.top().pad(20);
+        stage.addActor(backgroundImage);
         stage.addActor(table);
 
         Label title = new Label("Talent / Hint Menu", skin, "title");
@@ -60,8 +64,11 @@ public class Talent implements Screen {
 
         Label cheats = new Label(
             "💡 Cheat Codes:\n" +
-                "• minute  → Skip 1 minute of game time\n" +
-                "• level → Instantly level up and open ability selection", skin);
+                "• time  → Skip 1 minute of game time\n" +
+                "• level → Instantly level up and open ability selection\n"+
+                "• boss → Spawns Elder Boss\n" +
+                "• hp → Adds 1 Health point\n"+
+                "• damage → Increases Gun damage", skin);
         table.add(cheats).left().pad(10).colspan(2);
         table.row();
 

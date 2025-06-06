@@ -114,13 +114,14 @@ public class GameView implements Screen {
         pixmap.dispose(); // آزادسازی منابع
         Preferences prefs = Gdx.app.getPreferences("TillDawnSettings");
         String selectedMusic = prefs.getString("music", "music1.mp3");
+        float musicVolume = prefs.getFloat("musicVolume", 0.5f);
 
         if (backgroundMusic != null) backgroundMusic.dispose();  // اطمینان از خالی بودن قبلی
 
-        /*backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal( selectedMusic));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal( selectedMusic));
         backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0.5f);
-        backgroundMusic.play();*/
+        backgroundMusic.setVolume(musicVolume);
+        backgroundMusic.play();
     }
     public void showTemporaryMessage(String message) {
         temporaryMessage = message;
@@ -174,7 +175,12 @@ public class GameView implements Screen {
             // زمان تمام شده، برگشت به منوی اصلی
             player.SecondsSurvived = gameTimeMinutes * 60f;
             if (AppData.CurrentUser != null) {
-                AppData.CurrentUser.Score = AppData.CurrentGameView.player.getScore();
+                if (AppData.CurrentUser.Score > AppData.CurrentGameView.player.getScore()){
+                    AppData.CurrentUser.Score = AppData.CurrentGameView.player.getScore();
+                    AppData.CurrentUser.KillCount = AppData.CurrentGameView.player.KillCount;
+                    AppData.CurrentUser.SecondsSurvived = AppData.CurrentGameView.player.SecondsSurvived;
+                }
+
             }
             game.setScreen(mainMenuView);
             AppData.showVictoryMessage(mainMenuView.skin, mainMenuView.stage);
@@ -186,7 +192,12 @@ public class GameView implements Screen {
             hide();
             return;
         }
-        if (player.gun.currentAmmo ==0){
+
+        //Auto Reload
+        Preferences prefs = Gdx.app.getPreferences("TillDawnSettings");
+        boolean autoReload = prefs.getBoolean("autoReload", true);
+
+        if (player.gun.currentAmmo ==0 && autoReload){
             player.gun.startReloading();
         }
 

@@ -141,6 +141,8 @@ public class GameController {
         view.player.SecondsSurvived = view.gameTimeMinutes *60 - view.gameTimer;
         if (AppData.CurrentUser != null) {
             AppData.CurrentUser.Score = AppData.CurrentGameView.player.getScore();
+            AppData.CurrentUser.KillCount = AppData.CurrentGameView.player.KillCount;
+            AppData.CurrentUser.SecondsSurvived = AppData.CurrentGameView.player.SecondsSurvived;
         }
         view.game.setScreen(view.mainMenuView);
         AppData.showGameOverMessage(view.mainMenuView.skin,view.mainMenuView.stage);
