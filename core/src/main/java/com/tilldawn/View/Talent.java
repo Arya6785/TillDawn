@@ -58,7 +58,7 @@ public class Talent implements Screen {
         table.row();
 
 
-        Label controls = new Label("🎮 Current Controls:\n• Move: W/A/S/D\n• Shoot: SPACE\n• Ability: E", skin);
+        Label controls = new Label("🎮 Current Controls:\n• Move: W/A/S/D", skin);
         table.add(controls).left().pad(10).colspan(2);
         table.row();
 
